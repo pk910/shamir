@@ -78,6 +78,12 @@
     </head>
     <body>
         <div class="container">
+            <div id="online-alert" class="alert alert-danger" role="alert">
+                You are currently online. Only use this tool in offline mode
+            </div>
+            <div id="offline-alert" class="alert alert-success hidden" role="alert">
+                You are offline
+            </div>
 
             <p class="version">Version: Prototype-1</p>
             <div class="text-center text-extreme-danger">
@@ -377,6 +383,7 @@
         <script src="js/unorm.js"></script>
         <script src="js/jquery.min.js"></script>
         <script src="js/bootstrap.min.js"></script>
+        <script src="js/onlinetest.js"></script>
         <script src="js/levenshtein.js"></script>
         <script src="js/shamir39.js"></script>
         <script src="js/sjcl-bip39.js"></script>
