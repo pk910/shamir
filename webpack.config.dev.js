@@ -12,14 +12,5 @@ module.exports = merge(common, {
     open: true,
     port: process.env.PORT || 9000,
     host: process.env.HOST || 'localhost',
-  },
-  module: {
-    rules: [
-      {
-        test: /\.(sass|scss)$/,
-        use: ['style-loader', 'css-loader', 'postcss-loader', 'sass-loader'],
-      },
-    ],
-  },
-  plugins: [new webpack.HotModuleReplacementPlugin()],
+  }
 });

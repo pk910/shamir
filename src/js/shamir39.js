@@ -744,3 +744,6 @@ Shamir39 = function() {
     init(11); // 11 bits = 2048-1 shares maximum
 
 }
+
+
+module.exports = Shamir39

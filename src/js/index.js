@@ -1,10 +1,13 @@
 (function() {
 
-    var Mnemonic = require('./jsbip39')
+    var Mnemonic = require('bip39')
+    var Levenshtein = require('fast-levenshtein')
+    var Shamir39 = require('./shamir39.js')
     var $ = require("jquery")
+    
     // mnemonics is populated as required by getLanguage
-    var mnemonics = { "english": new Mnemonic("english") };
-    var mnemonic = mnemonics["english"];
+    var mnemonics = Mnemonic.wordlists
+    var mnemonic = Mnemonic.getDefaultWordlist()
 
     var shamir39 = new Shamir39();
 
@@ -99,7 +102,7 @@
         var m = parseInt(DOM.parameterM.val());
         var n = parseInt(DOM.parameterN.val());
         var language = getLanguage(phrase);
-        var wordlist = WORDLISTS[language];
+        var wordlist = Mnemonic.wordlists[language];
         var parts = shamir39.split(words, wordlist, m, n);
         if ("error" in parts) {
             DOM.splitParts.val(parts.error);
@@ -134,7 +137,7 @@
         }
         // combine the phrases into the original mnemonic
         var language = getLanguage(parts[0]);
-        var wordlist = WORDLISTS[language];
+        var wordlist = Mnemonic.wordlists[language];
         var words = shamir39.combine(mnemonics, wordlist);
         if ("error" in words) {
             DOM.combinePhrase.val(words.error);
@@ -152,7 +155,8 @@
         }
         var numWords = parseInt(DOM.generatedStrength.val());
         var strength = numWords / 3 * 32;
-        var words = mnemonic.generate(strength);
+        console.log(strength)
+        var words = Mnemonic.generateMnemonic(strength);
         DOM.splitPhrase.val(words);
         return words;
     }
@@ -181,9 +185,21 @@
             .hide();
     }
 
+    function normalizeString(str) {
+        if (typeof str.normalize == "function") {
+            return str.normalize("NFKD");
+        }
+        else {
+            // TODO decide how to handle this in the future.
+            // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/normalize
+            return str;
+        }
+    }
+
     function findPhraseErrors(phrase) {
         // Preprocess the words
-        phrase = mnemonic.normalizeString(phrase);
+
+        phrase = normalizeString(phrase);
         var words = phraseToWordArray(phrase);
         // Detect blank phrase
         if (words.length == 0) {
@@ -193,7 +209,7 @@
         for (var i=0; i<words.length; i++) {
             var word = words[i];
             var language = getLanguage(phrase);
-            if (WORDLISTS[language].indexOf(word) == -1) {
+            if (Mnemonic.wordlists[language].indexOf(word) == -1) {
                 console.log("Finding closest match to " + word);
                 var nearestWord = findNearestWord(word);
                 return word + " not in wordlist, did you mean " + nearestWord + "?";
@@ -201,12 +217,14 @@
         }
         // Check the words are valid
         var properPhrase = wordArrayToPhrase(words);
-        var isValid = mnemonic.check(properPhrase);
+        var isValid = Mnemonic.validateMnemonic(properPhrase);
         if (!isValid) {
             return "Invalid mnemonic";
         }
         return false;
     }
+
+
 
     function hasStrongRandom() {
         return 'crypto' in window && window['crypto'] !== null;
@@ -220,7 +238,7 @@
 
     function findNearestWord(word) {
         var language = getLanguage(word);
-        var words = WORDLISTS[language];
+        var words = Mnemonic.wordlists[language];
         var minDistance = 99;
         var closestWord = words[0];
         for (var i=0; i<words.length; i++) {
@@ -272,11 +290,11 @@
         if (phrase.length > 0) {
             var words = phraseToWordArray(phrase);
             var languageMatches = {};
-            for (l in WORDLISTS) {
+            for (l in Mnemonic.wordlists) {
                 // Track how many words match in this language
                 languageMatches[l] = 0;
                 for (var i=0; i<words.length; i++) {
-                    var wordInLanguage = WORDLISTS[l].indexOf(words[i]) > -1;
+                    var wordInLanguage = Mnemonic.wordlists[l].indexOf(words[i]) > -1;
                     if (wordInLanguage) {
                         languageMatches[l]++;
                     }
@@ -310,7 +328,7 @@
     }
 
     function getLanguageFromUrl() {
-        for (var language in WORDLISTS) {
+        for (var language in Mnemonic.wordlists) {
             if (window.location.hash.indexOf(language) > -1) {
                 return language;
             }
@@ -321,8 +339,8 @@
     function setMnemonicLanguage() {
         var language = getLanguage();
         // Load the bip39 mnemonic generator for this language if required
-        if (!(language in mnemonics)) {
-            mnemonics[language] = new Mnemonic(language);
+        if (!(language in Mnemonic.wordlists)) {
+            mnemonics[language] = Mnemonic.setDefaultWordlist(language);
         }
         mnemonic = mnemonics[language];
     }
@@ -334,8 +352,8 @@
         var newWords = [];
         for (var i=0; i<oldWords.length; i++) {
             var oldWord = oldWords[i];
-            var index = WORDLISTS[oldLanguage].indexOf(oldWord);
-            var newWord = WORDLISTS[newLanguage][index];
+            var index = Mnemonic.wordlists[oldLanguage].indexOf(oldWord);
+            var newWord = Mnemonic.wordlists[newLanguage][index];
             newWords.push(newWord);
         }
         newPhrase = wordArrayToPhrase(newWords);

@@ -1,56 +1,52 @@
 const glob = require('glob');
 const path = require('path');
 
-const CopyWebpackPlugin = require('copy-webpack-plugin');
-const HTMLWebpackPlugin = require('html-webpack-plugin');
-const HtmlWebpackInlineSourcePlugin = require('html-webpack-inline-source-plugin');
 
-// const generateHTMLPlugins = () => glob.sync('./src/**/*.html').map(
-//   dir => new HTMLWebpackPlugin({
-//     filename: path.basename(dir), // Output
-//     template: dir, // Input
-//     inlineSource: '.(js|css)$' // embed all javascript and css inline
-//   })
-// );
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+const HtmlWebpackInlineSourcePlugin = require('html-webpack-inline-source-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+
 
 module.exports = {
-  node: {
-    fs: 'empty',
-  },
-  entry: ['./src/js/app.js', './src/style/main.scss'],
+  entry: './src/app.js',
   output: {
-    path: path.resolve(__dirname, 'dist'),
-    filename: 'app.bundle.js',
+    path: __dirname + '/dist',
+    filename: 'index_bundle.js'
+  },
+  optimization: {
+    // We no not want to minimize our code.
+    minimize: false
   },
   module: {
-    rules: [
-      {
-        test: /\.js$/,
-        loader: 'babel-loader',
-      },
-      {
-        test: /\.html$/,
-        loader: 'raw-loader',
-      },
-    ],
+    rules: [{
+      test: /\.(scss)$/,
+      use: [{
+        loader: 'style-loader', // inject CSS to page
+      }, {
+        loader: 'css-loader', // translates CSS into CommonJS modules
+      }, {
+        loader: 'postcss-loader', // Run post css actions
+        options: {
+          plugins: function () { // post css plugins, can be exported to postcss.config.js
+            return [
+              require('precss'),
+              require('autoprefixer')
+            ];
+          }
+        }
+      }, {
+        loader: 'sass-loader' // compiles Sass to CSS
+      }]
+    }]
   },
+  devtool: 'inline-source-map',
   plugins: [
-    new CopyWebpackPlugin([
-      {
-        from: './src/static/',
-        to: './static/',
-      },
-    ]),
-    // ...generateHTMLPlugins(),
-    new HTMLWebpackPlugin({
-      // filename: path.resolve(__dirname, 'dist') + 'foo.html', // Output
+    new CleanWebpackPlugin(),
+    new HtmlWebpackPlugin({
+      title: 'Seedhodler',
       template: './src/index.html', // Input
-      inlineSource: '.(js|css)$' // embed all javascript and css inline
+      inlineSource: '.(js|css)$'
     }),
     new HtmlWebpackInlineSourcePlugin()
-  ],
-  stats: {
-    colors: true,
-  },
-  devtool: 'source-map',
-};
+  ]
+}
