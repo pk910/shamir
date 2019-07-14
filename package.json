@@ -10,7 +10,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack --config webpack.config.prod.js",
     "start:dev": "webpack-dev-server --config webpack.config.dev.js",
-    "start": "webpack --config webpack.config.prod.js && http-server ./dist -o"
+    "start": "webpack --config webpack.config.prod.js && http-server ./dist -o",
+    "deploy": "npm run build && git subtree push --prefix dist origin gh-pages"
   },
   "repository": {
     "type": "git",
