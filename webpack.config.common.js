@@ -1,20 +1,20 @@
 const glob = require('glob');
 const path = require('path');
 
-
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const HtmlWebpackInlineSourcePlugin = require('html-webpack-inline-source-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
-
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const WebpackMd5Hash = require("webpack-md5-hash");
 
 module.exports = {
   entry: './src/app.js',
   output: {
-    path: __dirname + '/dist',
-    filename: 'index_bundle.js'
+    path: path.resolve(__dirname, 'dist'),
+    filename: '[name].[chunkhash].js'
+    // comments: true
   },
   optimization: {
-    // We no not want to minimize our code.
     minimize: false
   },
   module: {
@@ -22,7 +22,11 @@ module.exports = {
       test: /\.(scss)$/,
       use: [{
         loader: 'style-loader', // inject CSS to page
-      }, {
+      },
+      {
+        loader: MiniCssExtractPlugin.loader,
+      },
+      {
         loader: 'css-loader', // translates CSS into CommonJS modules
       }, {
         loader: 'postcss-loader', // Run post css actions
@@ -39,14 +43,18 @@ module.exports = {
       }]
     }]
   },
-  devtool: 'inline-source-map',
   plugins: [
     new CleanWebpackPlugin(),
+    new MiniCssExtractPlugin({
+      filename: 'style.[contenthash].css',
+    }),
     new HtmlWebpackPlugin({
       title: 'Seedhodler',
       template: './src/index.html', // Input
+      // hash: true,
       inlineSource: '.(js|css)$'
     }),
-    new HtmlWebpackInlineSourcePlugin()
+    new HtmlWebpackInlineSourcePlugin(),
+    new WebpackMd5Hash()
   ]
 }

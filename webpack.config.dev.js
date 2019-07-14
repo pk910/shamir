@@ -12,5 +12,6 @@ module.exports = merge(common, {
     open: true,
     port: process.env.PORT || 9000,
     host: process.env.HOST || 'localhost',
-  }
+  },
+  devtool: 'inline-source-map'
 });
