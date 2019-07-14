@@ -20,6 +20,7 @@
  * THE SOFTWARE.
  */
 
+
 Shamir39 = function() {
 
     var VERSION = "shamir39-p1";

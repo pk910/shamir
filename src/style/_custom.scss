@@ -19,9 +19,9 @@ $random-color: hsl(random(360),$s-min+random($s-max+-$s-min),$l-min+random($l-ma
   background: linear-gradient($color,map-get($to, $type));
 }
 
-body {
-    @include linearGradient($random-color,light);
-}
+// body {
+//     @include linearGradient($random-color,light);
+// }
 
 .hidden {
     display: none
