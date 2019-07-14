@@ -8,6 +8,7 @@ const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const WebpackMd5Hash = require("webpack-md5-hash");
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
   entry: './src/app.js',
@@ -46,6 +47,12 @@ module.exports = {
   },
   plugins: [
     new CleanWebpackPlugin(),
+    new CopyWebpackPlugin([
+      {
+        from: './src/static/',
+        to: './static/',
+      },
+    ]),
     new MiniCssExtractPlugin({
       filename: 'style.[contenthash].css',
     }),
