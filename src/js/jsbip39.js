@@ -26,6 +26,8 @@
  * https://github.com/bitwiseshiftleft/sjcl
  */
 
+var sjcl = require("sjcl")
+
 var Mnemonic = function(language) {
 
     var PBKDF2_ROUNDS = 2048;
@@ -222,3 +224,5 @@ var Mnemonic = function(language) {
     init();
 
 }
+
+module.exports = Mnemonic

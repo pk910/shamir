@@ -1,5 +1,7 @@
 (function() {
 
+    var Mnemonic = require('./jsbip39')
+    var $ = require("jquery")
     // mnemonics is populated as required by getLanguage
     var mnemonics = { "english": new Mnemonic("english") };
     var mnemonic = mnemonics["english"];
