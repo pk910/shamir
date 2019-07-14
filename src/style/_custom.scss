@@ -26,3 +26,7 @@ $random-color: hsl(random(360),$s-min+random($s-max+-$s-min),$l-min+random($l-ma
 .hidden {
     display: none
 }
+
+textarea {
+    font-size: 0.7rem !important;
+}
