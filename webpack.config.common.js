@@ -11,8 +11,7 @@ module.exports = {
   entry: './src/app.js',
   output: {
     path: path.resolve(__dirname, 'dist'),
-    filename: '[name].[chunkhash].js'
-    // comments: true
+    filename: '[name].[hash].js'
   },
   optimization: {
     minimize: false

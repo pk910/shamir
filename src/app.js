@@ -5,6 +5,5 @@ if (module.hot) {
 
 require('./style/main.scss')
 require('bootstrap')
-
-
-require('./js/index.js')
+require('./js/shamir39.index')
+require('./js/onlinetest')

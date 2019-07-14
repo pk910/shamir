@@ -1,8 +1,11 @@
 body {
   font-family: light;
-  color: #8b9e29;
-  background: #8b9e29;
-  background: linear-gradient(#8b9e29, #b8cf44); }
+  color: #70198a;
+  background: #70198a;
+  background: linear-gradient(#70198a, #a425cb); }
+
+.hidden {
+  display: none; }
 
 /*!
  * Bootstrap v4.3.1 (https://getbootstrap.com/)

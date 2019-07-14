@@ -24630,10 +24630,8 @@ if (false) {}
 
 __webpack_require__(79)
 __webpack_require__(83)
-
-
 __webpack_require__(85)
-
+__webpack_require__(181)
 
 /***/ }),
 /* 79 */
@@ -32222,13 +32220,35 @@ Popper.Defaults = Defaults;
 /* 85 */
 /***/ (function(module, exports, __webpack_require__) {
 
+/* The MIT License (MIT)
+ * Copyright (c) 2014-2016 Ian Coleman
+
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
+
 (function() {
 
     var Mnemonic = __webpack_require__(86)
     var Levenshtein = __webpack_require__(113)
     var Shamir39 = __webpack_require__(116)
     var $ = __webpack_require__(41)
-    
+
     // mnemonics is populated as required by getLanguage
     var mnemonics = Mnemonic.wordlists
     var mnemonic = Mnemonic.getDefaultWordlist()
@@ -34189,6 +34209,28 @@ module.exports = __webpack_amd_options__;
 /***/ }),
 /* 116 */
 /***/ (function(module, exports, __webpack_require__) {
+
+/* The MIT License (MIT)
+ * Copyright (c) 2014-2016 Ian Coleman
+
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ * THE SOFTWARE.
+ */
 
 Shamir39 = function() {
 
@@ -42605,6 +42647,35 @@ function randomFillSync (buf, offset, size) {
 }
 
 /* WEBPACK VAR INJECTION */}.call(this, __webpack_require__(6), __webpack_require__(8)))
+
+/***/ }),
+/* 181 */
+/***/ (function(module, exports) {
+
+(function () {
+    window.addEventListener('load', function () {
+        function updateOnlineStatus(event) {
+            console.log('status changed')
+
+            var condition = navigator.onLine ? 'online' : 'offline';
+            var online = document.getElementById("online-alert")
+            var offline = document.getElementById("offline-alert")
+
+            if (condition === 'offline') {
+                online.classList.add('hidden')
+                offline.classList.remove('hidden')
+            } else {
+                online.classList.remove('hidden')
+                offline.classList.add('hidden')
+            }
+        }
+
+        window.addEventListener('online', updateOnlineStatus)
+        window.addEventListener('offline', updateOnlineStatus)
+        updateOnlineStatus()
+    })
+})();
+
 
 /***/ })
 /******/ ]);
