@@ -1,0 +1,32 @@
+$s-min: 20;
+$s-max: 70;
+$l-min: 30;
+$l-max: 90;
+$random-color: hsl(random(360),$s-min+random($s-max+-$s-min),$l-min+random($l-max+-$l-min));
+
+@mixin linearGradient($color,$type) {
+  $to: (
+    light: lighten($color,15%),
+    lightest: lighten($color,30%),
+    dark: darken($color,15%),
+    darkest: darken($color,30%)
+  );
+  
+  font-family:$type;
+  color: $color;
+  background: nth(nth($color, 1), 1);
+  background: -webkit-linear-gradient(legacy-direction($color),map-get($to, $type));
+  background: linear-gradient($color,map-get($to, $type));
+}
+
+// body {
+//     @include linearGradient($random-color,light);
+// }
+
+.hidden {
+    display: none
+}
+
+textarea {
+    font-size: 0.7rem !important;
+}
