@@ -47,12 +47,14 @@ module.exports = {
   },
   plugins: [
     new CleanWebpackPlugin(),
-    new CopyWebpackPlugin([
-      {
-        from: './src/static/',
-        to: './static/',
-      },
-    ]),
+    new CopyWebpackPlugin({
+      patterns: [
+        {
+          from: './src/static/',
+          to: './static/',
+        },
+      ]
+    }),
     new MiniCssExtractPlugin({
       filename: 'style.[contenthash].css',
     }),
