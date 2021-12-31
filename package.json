@@ -1,6 +1,6 @@
 {
   "name": "shamir39-cli",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Shamir Secret Sharing built for BIP39 Mnemonics as command line utility. Alternative implementation to https://github.com/iancoleman/shamir39 ",
   "main": "index.js",
   "scripts": {
