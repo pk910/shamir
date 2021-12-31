@@ -1,27 +1,21 @@
 # Disclaimer
 
-This tool is forked off of the awesome [Shamir39](https://iancoleman.github.io/shamir39/) work by [Ian Coleman](https://iancoleman.github.io). It aims to provide an alternative compatible implementation.
+This tool is forked off of the awesome [Shamir39](https://iancoleman.github.io/shamir39/) work by [Ian Coleman](https://iancoleman.github.io) and the improved implementation of [Shamir39](https://github.com/seedhodler/shamir) by Seedhodler. It aims to provide a simple command line utility.
 
 # Shamir39 Tool
 
 A tool for converting BIP39 mnemonic phrases to shamir secret sharing scheme parts whilst retaining the benefit of mnemonics.
 
-## Online Version
+## Prebuilt Binaries
 
-https://seedhodler.github.io/shamir/
-
-## Standalone offline version
-
-Download `dist/index.html`
-
-Open the file in a browser by double clicking it.
+See prebuilt binaries in `dist` folder
 
 Alternatively:
 
 - clone the project
 - `$ npm i`
 - `npm run build`
-- open `dist/index.html` in your browser
+- open binary or run `node shamir39.js` in `dist` folder
 
 # License
 

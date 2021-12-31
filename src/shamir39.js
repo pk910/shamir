@@ -192,7 +192,8 @@ Shamir39 = function() {
         // validate the parameters to ensure the secret can be created
         if (hexParts.length < requiredParts) {
             return {
-                error: "Not enough parts, requires " + requiredParts
+                error: "Not enough parts, requires " + requiredParts,
+                requiredParts: requiredParts
             }
         }
         // combine parts into secret
