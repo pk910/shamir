@@ -89,3 +89,4 @@ typings/
 
 # nexe build temp
 build/
+dist/

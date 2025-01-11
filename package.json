@@ -3,19 +3,33 @@
   "version": "1.0.0",
   "description": "Shamir Secret Sharing built for BIP39 Mnemonics as command line utility. Alternative implementation to https://github.com/iancoleman/shamir39 ",
   "main": "index.js",
+  "bin": "dist/shamir39.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack --config webpack.config.prod.js",
+    "pkg": "pkg .",
     "devbuild": "webpack --config webpack.config.dev.js"
   },
   "author": "",
   "license": "SEE LICENSE IN LICENSE",
+  "pkg": {
+    "scripts": "dist/*.js",
+    "assets": [],
+    "targets": [
+      "node18-win-x64",
+      "node18-linux-x64",
+      "node18-macos-x64",
+      "node18-linux-arm64",
+      "node18-macos-arm64"
+    ],
+    "outputPath": "dist"
+  },
   "devDependencies": {
     "clean-webpack-plugin": "^4.0.0",
-    "nexe-webpack-plugin": "^0.1.1",
+    "pkg": "^5.8.1",
     "terser-webpack-plugin": "^4.2.3",
     "upx": "^1.0.6",
-    "webpack": "^4.46.0",
+    "webpack": "^5.97.1",
     "webpack-cli": "^4.9.1",
     "webpack-merge": "^5.8.0"
   },

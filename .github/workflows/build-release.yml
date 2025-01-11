@@ -1,0 +1,136 @@
+
+name: Build Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version Number ('0.x.y')"
+        required: true
+
+permissions:
+  contents: write
+
+jobs:
+  create_release:
+    name: Create Release
+    needs: []
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+      with:
+        fetch-depth: 100
+        ref: ${{ github.sha }}
+    
+    # build package & binaries
+    - name: Set up node
+      uses: actions/setup-node@v4
+      with:
+        node-version: 20.x
+    - name: Install npm dependencies
+      run: |
+        npm install
+    - name: Build js package
+      run: |
+        npm run build
+    - name: Build executables
+      run: |
+        npm run pkg
+
+    # generate release changelog
+    - name: "Generate release changelog"
+      id: changelog
+      run: |
+        git fetch --tags
+        prev_tag=$(git tag --sort=-version:refname | grep -e "^v[0-9.]*$" | head -n 1)
+        echo "previous release: $prev_tag"
+        if [ "$prev_tag" ]; then
+          changelog=$(git log --oneline --no-decorate $prev_tag..HEAD)
+        else
+          changelog=$(git log --oneline --no-decorate)
+        fi
+        echo "changelog<<EOF" >> $GITHUB_OUTPUT
+        echo " - ${changelog//$'\n'/$'\n' - }" >> $GITHUB_OUTPUT
+        echo "EOF" >> $GITHUB_OUTPUT
+
+    # create draft release
+    - name: Create latest release
+      uses: actions/create-release@v1
+      id: create_release
+      with:
+        draft: true
+        prerelease: false
+        release_name: "v${{ inputs.version }}"
+        tag_name: "v${{ inputs.version }}"
+        body: |
+          ### Major Changes
+          - Add major changes here
+
+          <details>
+            <summary>Full changelog</summary>
+          
+          ### Changes
+          ${{ steps.changelog.outputs.changelog }}
+          </details>
+
+          ### Release Artifacts
+          | Release File  | Description |
+          | ------------- | ------------- |
+          | [shamir39-cli-win64.exe](https://github.com/pk910/shamir39-cli/releases/download/v${{ inputs.version }}/shamir39-cli-win64.exe) | shamir39-cli executable for windows/amd64 |
+          | [shamir39-cli-linux-amd64](https://github.com/pk910/shamir39-cli/releases/download/v${{ inputs.version }}/shamir39-cli-linux-amd64) | shamir39-cli executable for linux/amd64 |
+          | [shamir39-cli-linux-arm64](https://github.com/pk910/shamir39-cli/releases/download/v${{ inputs.version }}/shamir39-cli-linux-arm64) | shamir39-cli executable for linux/arm64 |
+          | [shamir39-cli-darwin-amd64](https://github.com/pk910/shamir39-cli/releases/download/v${{ inputs.version }}/shamir39-cli-darwin-amd64) | shamir39-cli executable for macos/amd64 |
+          | [shamir39-cli-darwin-arm64](https://github.com/pk910/shamir39-cli/releases/download/v${{ inputs.version }}/shamir39-cli-darwin-arm64) | shamir39-cli executable for macos/arm64 |
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+
+    # generate & upload release artifacts
+    - name: "Upload release artifact: shamir39-cli-win64.exe"
+      uses: actions/upload-release-asset@v1
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./dist/shamir39-cli-win-x64.exe
+        asset_name: shamir39-cli-win64.exe
+        asset_content_type: application/octet-stream
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+    
+    - name: "Upload release artifact: shamir39-cli-linux-amd64"
+      uses: actions/upload-release-asset@v1
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./dist/shamir39-cli-linux-x64
+        asset_name: shamir39-cli-linux-amd64
+        asset_content_type: application/octet-stream
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+    
+    - name: "Upload release artifact: shamir39-cli-linux-arm64"
+      uses: actions/upload-release-asset@v1
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./dist/shamir39-cli-linux-arm64
+        asset_name: shamir39-cli-linux-arm64
+        asset_content_type: application/octet-stream
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+    
+    - name: "Upload release artifact: shamir39-cli-darwin-amd64"
+      uses: actions/upload-release-asset@v1
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./dist/shamir39-cli-macos-x64
+        asset_name: shamir39-cli-darwin-amd64
+        asset_content_type: application/octet-stream
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+
+    - name: "Upload release artifact: shamir39-cli-darwin-arm64"
+      uses: actions/upload-release-asset@v1
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./dist/shamir39-cli-macos-arm64
+        asset_name: shamir39-cli-darwin-arm64
+        asset_content_type: application/octet-stream
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
